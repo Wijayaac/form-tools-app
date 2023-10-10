@@ -1,0 +1,81 @@
+.editor {
+	padding: 10px;
+}
+
+.sidebar {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	max-width: 25%;
+	height: calc(100vh - 80px);
+	width: 100%;
+	background-color: #fff;
+	margin: 10px;
+}
+
+.sidebar .wrapper {
+	padding: 10px;
+	height: 100%;
+	position: relative;
+	display: grid;
+	grid-template-rows: 14% 74% 16%;
+}
+
+.input {
+	display: flex;
+	flex-direction: column;
+}
+
+.input label,
+.label {
+	font-size: 1.2rem;
+	margin-bottom: 0.5rem;
+	font-weight: 500;
+}
+
+.label {
+	padding-top: 1rem;
+}
+
+.input label span {
+	color: red;
+}
+
+.input input {
+	padding: 0.75rem;
+	border-radius: 0.1rem;
+	border: 1px solid #ccc;
+	margin-bottom: 0.5rem;
+	width: 100%;
+	font-size: 15px;
+}
+
+.sidebar .wrapper form {
+	padding: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.sidebar .wrapper .content {
+	overflow-y: auto;
+}
+
+.sidebar .wrapper .footer {
+	/* position: absolute; */
+	/* bottom: 10px; */
+	/* left: 10px; */
+	display: flex;
+	flex-direction: column;
+	width: 90%;
+	gap: 10px;
+	background-color: #fff;
+	padding: 10px;
+}
+
+.button {
+	width: 100%;
+	padding: 10px 20px;
+	border-radius: 4px;
+	font-size: 16px;
+	color: #1a1a1a;
+	border: 1px solid green;
+}

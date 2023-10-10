@@ -11,7 +11,7 @@ const AddForm = () => {
   }, []);
 
   return (
-    <div className='page-wrapper'>
+    <div>
       <FormEditor />
     </div>
   );
