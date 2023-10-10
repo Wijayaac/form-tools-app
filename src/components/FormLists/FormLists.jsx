@@ -1,39 +1,28 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 
-const forms = [
-  {
-    id: 1,
-    name: "Form 1",
-  },
-  {
-    id: 2,
-    name: "Form 2",
-  },
-  {
-    id: 3,
-    name: "Form 3",
-  },
-  {
-    id: 4,
-    name: "Form 4",
-  },
-  {
-    id: 5,
-    name: "Form 5",
-  },
-];
+import FormItem from "./FormItem";
 
-const FormLists = () => {
+import style from "./FormLists.module.css";
+
+const FormLists = ({ forms }) => {
   return (
-    <div>
-      {forms.map((form) => {
-        return (
-          <div key={form.id}>
-            <NavLink to={`/forms/${form.id}`}>{form.name}</NavLink>
+    <div className={style.lists}>
+      <div className={style.wrapper}>
+        <div className={style.header}>
+          <div className={style.grid}>
+            <span>ID</span>
+            <span>Form</span>
+            <span>Source Code</span>
+            <span>Copy token</span>
+            <span>Action</span>
           </div>
-        );
-      })}
+        </div>
+        <div className={`${style.content}`}>
+          {forms.map((form, idx) => {
+            return <FormItem key={form.id} form={form} idx={idx + 1} />;
+          })}
+        </div>
+      </div>
     </div>
   );
 };

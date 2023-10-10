@@ -1,0 +1,21 @@
+.grid {
+	display: grid;
+	grid-template-columns: repeat(2, 10%) 50% 10% 15%;
+	gap: 10px;
+	margin-block: 5px;
+}
+
+.grid span {
+	font-size: 14px;
+}
+
+.action {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.action button {
+	padding: 8px 16px;
+	font-size: 16px;
+}

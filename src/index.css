@@ -11,3 +11,21 @@
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
 }
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+p:last-child {
+	margin: 0;
+}
+
+button {
+	background-color: transparent;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	display: inline-block;
+}

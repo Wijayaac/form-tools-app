@@ -1,15 +1,15 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+import { Header, HeaderProvider } from "../components/Header";
 
 const Root = () => {
   return (
     <>
-      <div>
-        <h1>React Router Contacts</h1>
-      </div>
-      <div>
+      <HeaderProvider>
+        <Header />
+        {/* TODO: Add more layout here */}
         <Outlet />
-      </div>
+      </HeaderProvider>
     </>
   );
 };

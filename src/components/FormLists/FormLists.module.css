@@ -1,0 +1,35 @@
+.lists {
+	max-width: 80vw;
+	margin: 48px auto;
+}
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.header {
+	background-color: #f5f5f5;
+	padding: 12px 24px;
+}
+
+.content {
+	padding: 12px 24px;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(2, 10%) 50% 10% 15%;
+	gap: 10px;
+}
+
+.grid span {
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.grid span:nth-child(3),
+.grid span:last-child {
+	text-align: center;
+}
