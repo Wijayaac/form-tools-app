@@ -1,4 +1,4 @@
 import Header from "./Header";
-import HeaderProvider from "./HeaderProvider";
+import HeaderProvider, { HeaderContext } from "./HeaderProvider";
 
-export { Header, HeaderProvider };
+export { Header, HeaderProvider, HeaderContext };

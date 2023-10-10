@@ -5,7 +5,7 @@ const Form = () => {
   const params = useParams();
   const { formId } = params;
 
-  return <div>form {formId}</div>;
+  return <div>form {formId && formId}</div>;
 };
 
 export default Form;

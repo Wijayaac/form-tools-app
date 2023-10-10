@@ -1,3 +1,4 @@
 import Form from "./Form";
+import FormEditor from "./FormEditor";
 
-export default Form;
+export { Form, FormEditor };

@@ -18,6 +18,10 @@
 	box-sizing: border-box;
 }
 
+body {
+	margin: 0;
+}
+
 p:last-child {
 	margin: 0;
 }
@@ -28,4 +32,13 @@ button {
 	outline: none;
 	cursor: pointer;
 	display: inline-block;
+}
+
+.page-wrapper {
+	margin-top: 60px;
+	max-width: 1280px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 20px;
+	padding-right: 20px;
 }

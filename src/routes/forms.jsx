@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import FormLists from "../components/FormLists";
-import { HeaderContext } from "../components/Header/HeaderProvider";
+import { HeaderContext } from "../components/Header";
 
 const Forms = () => {
   const [forms, setForms] = useState([]);
@@ -21,8 +21,7 @@ const Forms = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Forms</h1>
+    <div className='page-wrapper'>
       <FormLists forms={forms} />
     </div>
   );
