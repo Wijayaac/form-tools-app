@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 
 import style from "./FormEditor.module.css";
 
-const fields = [
+const availableFields = [
   {
     id: 1,
     name: "Text",
@@ -80,40 +80,71 @@ const FormEditor = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFieldOpen, setIsFieldOpen] = useState(false);
   const [selectedField, setSelectedField] = useState({
-    name: "",
     id: 1,
-    name: "Text",
-    type: "text",
-    placeholder: "Text",
+    name: "",
+    type: "",
+    placeholder: "",
     required: false,
   });
+  const [fields, setFields] = useState([]);
 
   const formik = useFormik({
     initialValues: {
       name: "",
       fields: [],
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      // save values and send to backend
+      try {
+        await fetch(`${import.meta.env.VITE_APP_API_URL}/forms`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        });
+      } catch (error) {
+        console.error(error);
+      }
     },
   });
 
   // handle save field when edited
   const fieldFormik = useFormik({
     initialValues: {
-      name: "",
-      placeholder: "",
-      required: false,
+      name: selectedField.name,
+      placeholder: selectedField.placeholder,
+      required: selectedField.required,
     },
+    enableReinitialize: true,
     onSubmit: (values) => {
-      console.log(values, "field");
+      const updatedFields = formik.values.fields.map((field) => {
+        if (field.id === selectedField.id) {
+          return {
+            ...field,
+            ...values,
+          };
+        }
+        return field;
+      });
+
+      formik.setFieldValue("fields", updatedFields);
+      fieldFormik.resetForm();
+
+      setFields(updatedFields);
+
+      setIsFieldOpen(false);
     },
   });
 
-  const handleFieldEditor = (field) => {
+  const handleFieldEditor = (field, newField = true) => {
     // TODO: add field random id so we can select it later when editing
+    if (newField) {
+      const id = Math.random();
+      field.id = id;
+      formik.setFieldValue("fields", [...formik.values.fields, field]);
+    }
     setSelectedField(field);
-    formik.setFieldValue("fields", [...formik.values.fields, field]);
     setIsFieldOpen(true);
   };
   return (
@@ -129,18 +160,22 @@ const FormEditor = () => {
               <label htmlFor='formName'>
                 Form Name <span>*</span>
               </label>
-              <input
-                type='text'
-                placeholder='Form Name'
-                id='formName'
-                name='name'
-                onChange={formik.handleChange}
-                defaultValue={formik.values.name}
-              />
+              <input type='text' placeholder='Form Name' id='formName' name='name' onChange={formik.handleChange} required />
             </div>
           </form>
           <div className={style.content}>
             <p className={style.label}>Elements</p>
+            {fields &&
+              fields.map((field) => (
+                <div key={field.id} className={style.field}>
+                  <div className={style["field-actions"]}>
+                    <button className={style["field-edit"]} onClick={() => handleFieldEditor(field, false)}>
+                      <img src={`/${field.type}.svg`} alt='' />
+                      <span>{field.name}</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
           </div>
           <div className={style.footer}>
             <button className={style.button} onClick={() => setIsOpen(true)}>
@@ -149,63 +184,36 @@ const FormEditor = () => {
             <button className={style.button}>Configurations</button>
           </div>
         </div>
-        <PopupContainer
-          isOpen={isOpen}
-          title='Add New Element'
-          setIsOpen={setIsOpen}>
+        <PopupContainer isOpen={isOpen} title='Add New Element' setIsOpen={setIsOpen}>
           <div className={style["option-wrapper"]}>
-            {fields.map((field) => (
-              <button
-                key={field.id}
-                className={style.option}
-                onClick={() => handleFieldEditor(field)}>
+            {availableFields.map((field) => (
+              <button key={field.id} className={style.option} onClick={() => handleFieldEditor(field)}>
                 <img src={`/${field.type}.svg`} alt='' />
                 {field.name}
               </button>
             ))}
           </div>
         </PopupContainer>
-        <PopupContainer
-          title={selectedField.name}
-          isOpen={isFieldOpen}
-          setIsOpen={setIsFieldOpen}>
+        <PopupContainer title={selectedField.name} isOpen={isFieldOpen} setIsOpen={setIsFieldOpen}>
           <div className={style["field-wrapper"]}>
             <form onSubmit={fieldFormik.handleSubmit}>
               <div className={style.input}>
                 <label htmlFor='fieldName'>
                   Field Name <span>*</span>
                 </label>
-                <input
-                  type='text'
-                  placeholder='Field Name'
-                  id='fieldName'
-                  name='name'
-                  onChange={fieldFormik.handleChange}
-                  defaultValue={fieldFormik.values.name}
-                />
+                <input type='text' placeholder='Field Name' id='fieldName' name='name' onChange={fieldFormik.handleChange} value={fieldFormik.values.name} />
               </div>
               <div className={style.input}>
                 <label htmlFor='fieldPlaceholder'>Placeholder</label>
-                <input
-                  type='text'
-                  placeholder='Placeholder'
-                  id='fieldPlaceholder'
-                  name='placeholder'
-                  onChange={fieldFormik.handleChange}
-                  defaultValue={fieldFormik.values.placeholder}
-                />
+                <input type='text' placeholder='Placeholder' id='fieldPlaceholder' name='placeholder' onChange={fieldFormik.handleChange} value={fieldFormik.values.placeholder} />
               </div>
               <div className={style.input}>
                 <label htmlFor='fieldRequired'>Required</label>
-                <input
-                  type='checkbox'
-                  id='fieldRequired'
-                  name='required'
-                  onChange={fieldFormik.handleChange}
-                  defaultValue={fieldFormik.values.required}
-                />
+                <input type='checkbox' id='fieldRequired' name='required' onChange={fieldFormik.handleChange} value={fieldFormik.values.required} />
               </div>
-              <button className={style.submit}>Save Field</button>
+              <button type='submit' className={style.submit}>
+                Save Field
+              </button>
             </form>
           </div>
         </PopupContainer>
@@ -226,19 +234,8 @@ const PopupContainer = ({ title, isOpen, setIsOpen, children }) => {
             <div className='popup-header'>
               <button className='popup-close' onClick={() => setIsOpen(false)}>
                 {/* TODO: Update icon to iconf font */}
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='40'
-                  height='40'
-                  viewBox='0 0 24 24'>
-                  <path
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    d='m15 6l-6 6l6 6'
-                  />
+                <svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24'>
+                  <path fill='none' stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='m15 6l-6 6l6 6' />
                 </svg>
               </button>
               <div className='popup-title'>{title || "Popup title"}</div>
