@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 
@@ -91,16 +91,24 @@ const FormEditor = ({ form }) => {
   const [fields, setFields] = useState([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (form) {
+      setFields(form.fields);
+    }
+  }, [form?.fields]);
+
   const formik = useFormik({
     initialValues: {
-      name: "",
-      fields: [],
+      name: form?.name || "",
+      fields: fields || [],
     },
+    enableReinitialize: true,
     onSubmit: async (values) => {
-      // save values and send to backend
+      const url = form ? `${import.meta.env.VITE_APP_API_URL}/forms/${form.id}` : `${import.meta.env.VITE_APP_API_URL}/forms`;
+      const method = form ? "PUT" : "POST";
       try {
-        await fetch(`${import.meta.env.VITE_APP_API_URL}/forms`, {
-          method: "POST",
+        await fetch(url, {
+          method: method,
           headers: {
             "Content-Type": "application/json",
           },
@@ -112,7 +120,6 @@ const FormEditor = ({ form }) => {
       }
     },
   });
-
   // handle save field when edited
   const fieldFormik = useFormik({
     initialValues: {
@@ -122,7 +129,7 @@ const FormEditor = ({ form }) => {
     },
     enableReinitialize: true,
     onSubmit: (values) => {
-      const updatedFields = formik.values.fields.map((field) => {
+      const updatedFields = fields.map((field) => {
         if (field.id === selectedField.id) {
           return {
             ...field,
@@ -142,30 +149,30 @@ const FormEditor = ({ form }) => {
   });
 
   const handleFieldEditor = (field, newField = true) => {
-    // TODO: add field random id so we can select it later when editing
     if (newField) {
       const id = Math.random();
       field.id = id;
-      formik.setFieldValue("fields", [...formik.values.fields, field]);
+      setFields((prevFields) => {
+        return [...prevFields, field];
+      });
     }
     setSelectedField(field);
     setIsFieldOpen(true);
   };
-  // TODO : load the form fields on the sidebar
+
   return (
     <div className={style.editor}>
       <button type='submit' form='sidebarForm' className={style.submit}>
         Submit
       </button>
       <div className={style.sidebar}>
-        {/* TODO: add Sidebar wrapper for editor */}
         <div className={style.wrapper}>
           <form onSubmit={formik.handleSubmit} id='sidebarForm'>
             <div className={style.input}>
               <label htmlFor='formName'>
                 Form Name <span>*</span>
               </label>
-              <input type='text' placeholder='Form Name' id='formName' name='name' onChange={formik.handleChange} required />
+              <input type='text' placeholder='Form Name' id='formName' name='name' onChange={formik.handleChange} value={formik.values.name} required />
             </div>
           </form>
           <div className={style.content}>
