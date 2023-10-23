@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 import style from "./FormItem.module.css";
 
 import code from "./../../assets/code.svg";
@@ -17,9 +19,9 @@ const FormItem = ({ form, idx }) => {
         </button>
       </div>
       <div className={style.action}>
-        <button>
+        <NavLink to={`/forms/${form.id}`}>
           <img src={pencil} alt='' />
-        </button>
+        </NavLink>
         <button>
           <img src={trash} alt='' />
         </button>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 
 import style from "./FormEditor.module.css";
 
@@ -75,8 +76,9 @@ const availableFields = [
     required: false,
   },
 ];
+// TODO : Add loading state when insert the forms
 
-const FormEditor = () => {
+const FormEditor = ({ form }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isFieldOpen, setIsFieldOpen] = useState(false);
   const [selectedField, setSelectedField] = useState({
@@ -87,6 +89,7 @@ const FormEditor = () => {
     required: false,
   });
   const [fields, setFields] = useState([]);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -103,6 +106,7 @@ const FormEditor = () => {
           },
           body: JSON.stringify(values),
         });
+        navigate("/forms");
       } catch (error) {
         console.error(error);
       }
@@ -147,6 +151,7 @@ const FormEditor = () => {
     setSelectedField(field);
     setIsFieldOpen(true);
   };
+  // TODO : load the form fields on the sidebar
   return (
     <div className={style.editor}>
       <button type='submit' form='sidebarForm' className={style.submit}>

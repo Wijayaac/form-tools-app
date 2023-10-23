@@ -20,6 +20,7 @@
 
 body {
 	margin: 0;
+	color-scheme: unset;
 	color: #111;
 	background-color: #FAFAFA;
 }
